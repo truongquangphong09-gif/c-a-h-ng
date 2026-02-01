@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNEAKER ELITE | Shop Giày Cao Cấp</title>
+    <style>
+        :root {
+            --primary-color: #000000;
+            --accent-color: #ff4757;
+            --bg-white: #ffffff;
+            --border-color: #eeeeee;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: var(--bg-white); color: #1a1a1a; }
+
+        /* HEADER */
+        header {
+            background: var(--bg-white);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0; width: 100%; z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo-text { font-size: 22px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; }
+        .logo-text span { color: var(--accent-color); }
+
+        .cart-btn {
+            background: var(--primary-color);
+            color: white; padding: 8px 18px;
+            border-radius: 4px; border: none;
+            font-weight: 600; cursor: pointer;
+        }
+
+        /* BANNER */
+        .hero {
+            height: 300px;
+            margin-top: 60px;
+            background: #fdfdfd;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .hero h1 { font-size: 36px; margin-bottom: 10px; }
+
+        /* PRODUCT GRID */
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; }
+
+        .card { background: white; transition: 0.3s; padding: 10px; border: 1px solid transparent; }
+        .card:hover { border: 1px solid #eee; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+
+        .card img { width: 100%; height: 280px; object-fit: cover; cursor: pointer; border-radius: 4px; }
+
+        .card-body { padding: 15px 0; }
+        .card-name { font-size: 17px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
+        .card-price { color: var(--accent-color); font-size: 19px; font-weight: 800; margin-bottom: 15px; }
+
+        .btn-group { display: flex; gap: 10px; }
+        .btn-action {
+            flex: 1; padding: 10px; border: none; border-radius: 4px;
+            font-weight: bold; cursor: pointer; transition: 0.3s;
+        }
+        .btn-view { background: #f0f0f0; color: #333; }
+        .btn-buy-now { background: var(--primary-color); color: white; }
+        .btn-buy-now:hover { background: var(--accent-color); }
+
+        /* MODAL */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center;
+        }
+
+        .modal-content {
+            background: white; width: 90%; max-width: 950px;
+            display: flex; flex-wrap: wrap; position: relative; border-radius: 8px; overflow: hidden;
+        }
+
+        .close-icon { position: absolute; right: 20px; top: 15px; font-size: 35px; cursor: pointer; color: #333; z-index: 10; }
+
+        .modal-left { flex: 1; min-width: 400px; }
+        .modal-left img { width: 100%; height: 100%; object-fit: cover; }
+
+        .modal-right { flex: 1; padding: 40px; min-width: 350px; }
+        .m-name { font-size: 28px; margin-bottom: 10px; text-transform: uppercase; }
+        .m-desc-box { background: #f9f9f9; padding: 15px; border-radius: 6px; margin: 20px 0; }
+        .m-desc-box b { display: block; margin-bottom: 5px; color: var(--primary-color); }
+        .m-desc-text { font-size: 14.5px; line-height: 1.7; color: #555; white-space: pre-line; }
+
+        footer { border-top: 1px solid var(--border-color); padding: 40px 5%; text-align: center; color: #777; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-text" onclick="location.reload()">SNEAKER <span>ELITE</span></div>
+        <button class="cart-btn" onclick="alert('Giỏ hàng trống')">GIỎ HÀNG (<span id="cart-count">0</span>)</button>
+    </header>
+
+    <div class="hero">
+        <h1>NEW ARRIVALS 2026</h1>
+        <p>Khám phá bộ sưu tập giày mới nhất với mô tả chi tiết.</p>
+    </div>
+
+    <div class="container">
+        <div class="grid" id="product-grid"></div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 SNEAKER ELITE - Đẳng cấp trên từng bước chân</p>
+    </footer>
+
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close-icon" onclick="closeModal()">&times;</span>
+            <div class="modal-left"><img id="m-img" src=""></div>
+            <div class="modal-right">
+                <h1 class="m-name" id="m-name"></h1>
+                <div class="card-price" id="m-price"></div>
+                
+                <div class="m-desc-box">
+                    <b>MÔ TẢ SẢN PHẨM:</b>
+                    <div class="m-desc-text" id="m-desc"></div>
+                </div>
+
+                <p style="margin-bottom: 20px;"><b>SIZE CÓ SẴN:</b> 38, 39, 40, 41, 42</p>
+                <button class="btn-action btn-buy-now" style="width: 100%; padding: 15px;" onclick="addToCart()">THÊM VÀO GIỎ HÀNG</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const shoes = [
+            {
+                id: 1,
+                name: "Nike Air Jordan 1 Low",
+                price: "3.500.000₫",
+                img: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=600",
+                desc: "- Chất liệu: Da thật cao cấp bền bỉ.\n- Công nghệ: Đệm khí Air độc quyền giúp bảo vệ gót chân.\n- Phong cách: Phối màu trẻ trung, dễ dàng phối cùng quần Jean hoặc Short.\n- Phù hợp: Đi chơi, dạo phố, đi làm hàng ngày."
+            },
+            {
+                id: 2,
+                name: "Adidas Forum Low",
+                price: "2.800.000₫",
+                img: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=600",
+                desc: "- Chất liệu: Da trơn kết hợp vải dệt thoáng khí.\n- Đặc điểm: Quai dán đặc trưng tạo sự chắc chắn.\n- Đế giày: Cao su chống trượt cực tốt trên mọi địa hình.\n- Thiết kế: Mang đậm phong cách bóng rổ thập niên 84."
+            },
+            {
+                id: 3,
+                name: "Puma Suede Classic",
+                price: "1.950.000₫",
+                img: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?q=80&w=600",
+                desc: "- Chất liệu: Da lộn (Suede) mềm mại, sang trọng.\n- Form dáng: Thiết kế thon gọn, ôm sát bàn chân.\n- Màu sắc: Đen trắng tối giản, không bao giờ lỗi mốt.\n- Lưu ý: Hạn chế đi dưới trời mưa để bảo quản lớp da lộn."
+            },
+            {
+                id: 4,
+                name: "Vans Old Skool Black",
+                price: "1.750.000₫",
+                img: "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?q=80&w=600",
+                desc: "- Chất liệu: Vải Canvas kết hợp da lộn.\n- Đường kẻ: Sidestripe đặc trưng chạy dọc thân giày.\n- Đế giày: Đế Waffle tổ ong cực kỳ bám đường.\n- Đối tượng: Dành cho những ai yêu thích sự năng động, bụi bặm."
+            }
+        ];
+
+        const grid = document.getElementById('product-grid');
+        let cart = 0;
+
+        shoes.forEach(s => {
+            grid.innerHTML += `
+                <div class="card">
+                    <img src="${s.img}" onclick="openModal(${s.id})">
+                    <div class="card-body">
+                        <div class="card-name">${s.name}</div>
+                        <div class="card-price">${s.price}</div>
+                        <div class="btn-group">
+                            <button class="btn-action btn-view" onclick="openModal(${s.id})">CHI TIẾT</button>
+                            <button class="btn-action btn-buy-now" onclick="addToCart()">MUA NGAY</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        function openModal(id) {
+            const s = shoes.find(x => x.id === id);
+            document.getElementById('m-name').innerText = s.name;
+            document.getElementById('m-price').innerText = s.price;
+            document.getElementById('m-desc').innerText = s.desc;
+            document.getElementById('m-img').src = s.img;
+            document.getElementById('productModal').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('productModal').style.display = 'none'; }
+        
+        function addToCart() {
+            cart++;
+            document.getElementById('cart-count').innerText = cart;
+            alert("✅ Đã thêm vào giỏ hàng và đặt mua thành công!");
+            closeModal();
+        }
+
+        window.onclick = (e) => { if(e.target.className == 'modal') closeModal(); }
+    </script>
+</body>
+</html>
